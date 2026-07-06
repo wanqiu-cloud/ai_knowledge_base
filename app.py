@@ -7,8 +7,23 @@ from openai import OpenAI
 # 加载密钥
 load_dotenv()
 
+import streamlit as st
+from openai import OpenAI
+
+# 优先从 Streamlit Secrets 读取，其次从 .env 读取
+def get_api_key():
+    try:
+        return st.secrets["ZHIPU_API_KEY"]
+    except Exception:
+        from dotenv import load_dotenv
+        import os
+        load_dotenv()
+        return os.getenv("ZHIPU_API_KEY")
+
+API_KEY = get_api_key()
+
 client = OpenAI(
-    api_key=os.getenv("ZHIPU_API_KEY"),
+    api_key=API_KEY,
     base_url="https://open.bigmodel.cn/api/paas/v4/"
 )
 
